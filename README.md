@@ -1155,7 +1155,7 @@ Ao iniciar este projeto você concorda com as diretrizes do Código de Conduta e
     ```
 
   * **[Será validado que é possível editar um blogpost com sucesso]**
-    - Se o blog post for alterado com sucesso o resultado retornado deverá ser conforme exibido abaixo, com um status http `201`:
+    - Se o blog post for alterado com sucesso o resultado retornado deverá ser conforme exibido abaixo, com um status http `200`:
     ```json
     {
       "id": 3,
