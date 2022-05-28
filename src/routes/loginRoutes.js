@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controllers');
+const middlewares = require('../middlewares/');
 
-router.post('/', controller.login);
+router.post('/', middlewares.validateLogin, controller.login);
 
 module.exports = router;
