@@ -5,6 +5,7 @@ const MISSING_FIELDS = 'Some required fields are missing';
 const ALREADY_REGISTERED = 'User already registered';
 const TOKEN_NOT_FOUND = 'Token not found';
 const EXPIRED_TOKEN = 'Expired or invalid token';
+const USER_DONT_EXIST = 'User does not exist';
 
 module.exports = {
   INTERNAL_ERROR,
@@ -13,4 +14,5 @@ module.exports = {
   ALREADY_REGISTERED,
   TOKEN_NOT_FOUND,
   EXPIRED_TOKEN,
+  USER_DONT_EXIST,
 };

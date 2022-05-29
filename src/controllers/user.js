@@ -16,7 +16,17 @@ const getAll = async (_req, res) => {
   return res.status(result.status).json(result.data);
 };
 
+const getById = async (req, res) => {
+  try {
+    const result = await services.user.getById(req.params.id);
+    return res.status(result.status).json(result.data);
+  } catch (err) {
+    return res.status(err.status).json({ message: err.message });
+  }
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };

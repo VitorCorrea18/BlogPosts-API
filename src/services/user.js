@@ -32,8 +32,20 @@ const getAll = async () => {
   return { status: status.OK, data };
 };
 
+const getById = async (id) => {
+  const result = await User.findOne({ where: { id } });
+  if (!result) {
+    const error = { status: status.NOT_FOUND, message: messages.USER_DONT_EXIST };
+    throw error;
+  }
+  const userData = result.dataValues;
+  const { password, ...userWithoutPass } = userData;
+  return { status: status.OK, data: userWithoutPass };
+}
+
 module.exports = {
   verifyUser,
   create,
   getAll,
+  getById,
 };
