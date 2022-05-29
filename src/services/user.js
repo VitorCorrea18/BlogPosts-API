@@ -19,12 +19,21 @@ const create = async (displayName, email, password, image) => {
   });
   const userData = newUser.dataValues;
   const { password: passDB, ...userWithoutPass } = userData;
-  console.log(userData, userWithoutPass);
   const token = { token: generateJWT(userWithoutPass) };
   return { status: status.CREATED, data: token };
+};
+
+const getAll = async () => {
+  const result = await User.findAll();
+  const data = result.map((user) => {
+    const { password: passDB, ...userWithoutPass } = user.dataValues;
+    return userWithoutPass;
+  });
+  return { status: status.OK, data };
 };
 
 module.exports = {
   verifyUser,
   create,
+  getAll,
 };
