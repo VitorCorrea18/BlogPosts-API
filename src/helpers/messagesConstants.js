@@ -6,6 +6,7 @@ const ALREADY_REGISTERED = 'User already registered';
 const TOKEN_NOT_FOUND = 'Token not found';
 const EXPIRED_TOKEN = 'Expired or invalid token';
 const USER_DONT_EXIST = 'User does not exist';
+const SERVER_ERROR = 'Internal server error';
 
 module.exports = {
   INTERNAL_ERROR,
@@ -15,4 +16,5 @@ module.exports = {
   TOKEN_NOT_FOUND,
   EXPIRED_TOKEN,
   USER_DONT_EXIST,
+  SERVER_ERROR,
 };
