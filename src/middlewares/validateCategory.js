@@ -9,6 +9,7 @@ const validateCategory = (req, _res, next) => {
   if (error) {
     next({ status: status.BAD_REQUEST, message: error.message });
   }
+
   next();
 };
 
