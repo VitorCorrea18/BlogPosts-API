@@ -7,6 +7,13 @@ const create = async (name) => {
   return { status: status.CREATED, data };
 };
 
+const getAll = async () => {
+  const result = await Category.findAll();
+  const data = result.map((category) => category.dataValues);
+  return { status: status.OK, data };
+};
+
 module.exports = {
   create,
+  getAll,
 };
