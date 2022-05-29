@@ -41,7 +41,7 @@ const getById = async (id) => {
   const userData = result.dataValues;
   const { password, ...userWithoutPass } = userData;
   return { status: status.OK, data: userWithoutPass };
-}
+};
 
 module.exports = {
   verifyUser,

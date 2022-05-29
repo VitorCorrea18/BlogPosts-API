@@ -7,6 +7,7 @@ const port = process.env.API_PORT || 3000;
 
 app.use('/login', routes.login);
 app.use('/user', routes.user);
+app.use('/categories', routes.category);
 
 // não remova esse endpoint
 app.get('/', (_request, response) => {
