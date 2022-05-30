@@ -30,8 +30,20 @@ const getById = async (req, res, next) => {
   }
 };
 
+const editPost = async (req, res, next) => {
+  const { title, content } = req.body;
+  try {
+    const loggedUser = await services.blogPost.getLoggedUser(req.headers.authorization);
+    const result = await services.blogPost.editPost(loggedUser, req.params.id, title, content);
+    return res.status(result.status).json(result.data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  editPost,
 };

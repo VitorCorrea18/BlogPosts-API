@@ -58,10 +58,40 @@ const getById = async (id) => {
   return { status: status.OK, data: result };
 };
 
+const getLoggedUser = async (token) => {
+  const secretkey = process.env.JWT_SECRET;
+  const decoded = jwt.verify(token, secretkey);
+  const user = await User.findOne({ where: { id: decoded.data.id } });
+  return user.dataValues;
+};
+
+const editPost = async (loggedUser, id, title, content) => {
+  const prevPost = await BlogPost.findByPk(id);
+  if (!prevPost) {
+    const error = { status: status.NOT_FOUND, message: messages.POST_DOESNT_EXIST };
+    throw error;
+  }
+  if (prevPost.userId !== loggedUser.id) {
+    const error = { status: status.UNAUTHORIZED, message: messages.UNAUTHORIZED_USER };
+    throw error;
+  }
+
+  await BlogPost.update({ title, content }, { where: { id } });
+  const newPost = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return { status: status.OK, data: newPost };
+};
+
 module.exports = {
   getUserId,
   create,
   verifyCategoryIds,
   getAll,
   getById,
+  editPost,
+  getLoggedUser,
 };
