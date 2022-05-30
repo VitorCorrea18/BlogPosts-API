@@ -34,8 +34,19 @@ const verifyCategoryIds = async (categoryIds) => {
   }
 };
 
+const getAll = async () => {
+  const result = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return { status: status.OK, data: result};
+};
+
 module.exports = {
   getUserId,
   create,
   verifyCategoryIds,
+  getAll,
 };
