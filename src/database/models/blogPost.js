@@ -14,7 +14,6 @@ const BlogPost = (sequelize, DataTypes) => {
     BlogPost.belongsTo(model.User, {
       as: 'user',
       foreignKey: 'userId',
-      onDelete: 'cascade',
     });
   }
 

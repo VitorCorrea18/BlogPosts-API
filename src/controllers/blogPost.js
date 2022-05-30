@@ -41,9 +41,20 @@ const editPost = async (req, res, next) => {
   }
 };
 
+const deletePost = async (req, res, next) => {
+  try {
+    const loggedUser = await services.blogPost.getLoggedUser(req.headers.authorization);
+    const result = await services.blogPost.deletePost(loggedUser, req.params.id);
+    return res.status(result.status).end();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   editPost,
+  deletePost,
 };

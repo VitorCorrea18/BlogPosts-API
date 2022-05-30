@@ -58,6 +58,10 @@ const getById = async (id) => {
   return { status: status.OK, data: result };
 };
 
+// To edit or delete a post the logged user must be the post owner
+// The getLoggedUser is called on the controllers to know the identity of the loggedUser
+// and then compare with the post key "userId";
+
 const getLoggedUser = async (token) => {
   const secretkey = process.env.JWT_SECRET;
   const decoded = jwt.verify(token, secretkey);
@@ -75,7 +79,6 @@ const editPost = async (loggedUser, id, title, content) => {
     const error = { status: status.UNAUTHORIZED, message: messages.UNAUTHORIZED_USER };
     throw error;
   }
-
   await BlogPost.update({ title, content }, { where: { id } });
   const newPost = await BlogPost.findByPk(id, {
     include: [
@@ -86,6 +89,24 @@ const editPost = async (loggedUser, id, title, content) => {
   return { status: status.OK, data: newPost };
 };
 
+const deletePost = async (loggedUser, id) => {
+  const post = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    ],
+  });
+  if (!post) {
+    const error = { status: status.NOT_FOUND, message: messages.POST_DOESNT_EXIST };
+    throw error;
+  }
+  if (post.userId !== loggedUser.id) {
+    const error = { status: status.UNAUTHORIZED, message: messages.UNAUTHORIZED_USER };
+    throw error;
+  }
+  await BlogPost.destroy({ where: { id } });
+  return { status: status.NO_CONTENT };
+};
+
 module.exports = {
   getUserId,
   create,
@@ -94,4 +115,5 @@ module.exports = {
   getById,
   editPost,
   getLoggedUser,
+  deletePost,
 };

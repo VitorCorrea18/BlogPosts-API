@@ -12,4 +12,6 @@ router.get('/:id', middlewares.authToken, controllers.blogPost.getById);
 router.put('/:id', middlewares.authToken, middlewares.validatePostUpdate,
   controllers.blogPost.editPost);
 
+router.delete('/:id', middlewares.authToken, controllers.blogPost.deletePost);
+
 module.exports = router;
