@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const { User } = require('../database/models');
 const { status, messages } = require('../helpers');
 const generateJWT = require('../utils/generateJWT');
@@ -43,9 +44,23 @@ const getById = async (id) => {
   return { status: status.OK, data: userWithoutPass };
 };
 
+const getLoggedUser = async (token) => {
+  const secretKey = process.env.JWT_SECRET;
+  const decoded = jwt.verify(token, secretKey);
+  const loggedUser = await User.findByPk(decoded.data.id);
+  return loggedUser.dataValues;
+};
+
+const deleteUser = async (id) => {
+  await User.destroy({ where: { id } });
+  return { status: status.NO_CONTENT };
+};
+
 module.exports = {
   verifyUser,
   create,
   getAll,
   getById,
+  getLoggedUser,
+  deleteUser,
 };
