@@ -8,6 +8,7 @@ const EXPIRED_TOKEN = 'Expired or invalid token';
 const USER_DONT_EXIST = 'User does not exist';
 const SERVER_ERROR = 'Internal server error';
 const CATEGORY_NOT_FOUND = '"categoryIds" not found';
+const POST_DOESNT_EXIST = 'Post does not exist';
 
 module.exports = {
   INTERNAL_ERROR,
@@ -19,4 +20,5 @@ module.exports = {
   USER_DONT_EXIST,
   SERVER_ERROR,
   CATEGORY_NOT_FOUND,
+  POST_DOESNT_EXIST,
 };

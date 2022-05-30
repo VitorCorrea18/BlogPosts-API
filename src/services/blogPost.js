@@ -41,7 +41,21 @@ const getAll = async () => {
       { model: Category, as: 'categories', through: { attributes: [] } },
     ],
   });
-  return { status: status.OK, data: result};
+  return { status: status.OK, data: result };
+};
+
+const getById = async (id) => {
+  const result = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  if (!result) {
+    const error = { status: status.NOT_FOUND, message: messages.POST_DOESNT_EXIST };
+    throw error;
+  }
+  return { status: status.OK, data: result };
 };
 
 module.exports = {
@@ -49,4 +63,5 @@ module.exports = {
   create,
   verifyCategoryIds,
   getAll,
+  getById,
 };
