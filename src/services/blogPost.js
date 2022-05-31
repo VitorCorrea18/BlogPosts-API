@@ -63,23 +63,17 @@ const getById = async (id) => {
 // The getLoggedUser is called on the controllers to know the identity of the loggedUser
 // and then compare with the post key "userId";
 
-const getLoggedUser = async (token) => {
+const verifyLoggedUser = async (token, post) => {
   const secretkey = process.env.JWT_SECRET;
   const decoded = jwt.verify(token, secretkey);
   const user = await User.findOne({ where: { id: decoded.data.id } });
-  return user.dataValues;
-};
-
-const editPost = async (loggedUser, id, title, content) => {
-  const prevPost = await BlogPost.findByPk(id);
-  if (!prevPost) {
-    const error = { status: status.NOT_FOUND, message: messages.POST_DOESNT_EXIST };
-    throw error;
-  }
-  if (prevPost.userId !== loggedUser.id) {
+  if (user.dataValues.id !== post.userId) {
     const error = { status: status.UNAUTHORIZED, message: messages.UNAUTHORIZED_USER };
     throw error;
   }
+};
+
+const editPost = async (id, title, content) => {
   await BlogPost.update({ title, content }, { where: { id } });
   const newPost = await BlogPost.findByPk(id, {
     include: [
@@ -90,20 +84,7 @@ const editPost = async (loggedUser, id, title, content) => {
   return { status: status.OK, data: newPost };
 };
 
-const deletePost = async (loggedUser, id) => {
-  const post = await BlogPost.findByPk(id, {
-    include: [
-      { model: User, as: 'user', attributes: { exclude: ['password'] } },
-    ],
-  });
-  if (!post) {
-    const error = { status: status.NOT_FOUND, message: messages.POST_DOESNT_EXIST };
-    throw error;
-  }
-  if (post.userId !== loggedUser.id) {
-    const error = { status: status.UNAUTHORIZED, message: messages.UNAUTHORIZED_USER };
-    throw error;
-  }
+const deletePost = async (id) => {
   await BlogPost.destroy({ where: { id } });
   return { status: status.NO_CONTENT };
 };
@@ -134,7 +115,7 @@ module.exports = {
   getAll,
   getById,
   editPost,
-  getLoggedUser,
+  verifyLoggedUser,
   deletePost,
   searchPost,
 };

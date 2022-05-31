@@ -33,8 +33,9 @@ const getById = async (req, res, next) => {
 const editPost = async (req, res, next) => {
   const { title, content } = req.body;
   try {
-    const loggedUser = await services.blogPost.getLoggedUser(req.headers.authorization);
-    const result = await services.blogPost.editPost(loggedUser, req.params.id, title, content);
+    const post = await services.blogPost.getById(req.params.id);
+    await services.blogPost.verifyLoggedUser(req.headers.authorization, post.data);
+    const result = await services.blogPost.editPost(req.params.id, title, content);
     return res.status(result.status).json(result.data);
   } catch (err) {
     next(err);
@@ -43,8 +44,9 @@ const editPost = async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   try {
-    const loggedUser = await services.blogPost.getLoggedUser(req.headers.authorization);
-    const result = await services.blogPost.deletePost(loggedUser, req.params.id);
+    const post = await services.blogPost.getById(req.params.id);
+    await services.blogPost.verifyLoggedUser(req.headers.authorization, post.data);
+    const result = await services.blogPost.deletePost(req.params.id);
     return res.status(result.status).end();
   } catch (err) {
     next(err);
