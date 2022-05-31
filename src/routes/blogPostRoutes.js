@@ -7,6 +7,8 @@ router.post('/', middlewares.authToken, middlewares.validateBlogPost,
 
 router.get('/', middlewares.authToken, controllers.blogPost.getAll);
 
+router.get('/search', middlewares.authToken, controllers.blogPost.searchPost);
+
 router.get('/:id', middlewares.authToken, controllers.blogPost.getById);
 
 router.put('/:id', middlewares.authToken, middlewares.validatePostUpdate,

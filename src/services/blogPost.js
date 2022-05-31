@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 const { BlogPost, PostCategory, User, Category } = require('../database/models');
 const { status, messages } = require('../helpers');
 
@@ -107,6 +108,25 @@ const deletePost = async (loggedUser, id) => {
   return { status: status.NO_CONTENT };
 };
 
+// https://stackoverflow.com/questions/53971268/node-sequelize-find-where-like-wildcard
+// https://pt.stackoverflow.com/questions/355872/como-utilizar-o-like-do-sql-no-sequelize
+
+const searchPost = async (query) => {
+  const post = await BlogPost.findAll({
+    where: {
+      [Op.or]: {
+        title: { [Op.like]: `%${query}%` },
+        content: { [Op.like]: `%${query}%` },
+      },
+    },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return { status: status.OK, data: post };
+};
+
 module.exports = {
   getUserId,
   create,
@@ -116,4 +136,5 @@ module.exports = {
   editPost,
   getLoggedUser,
   deletePost,
+  searchPost,
 };
